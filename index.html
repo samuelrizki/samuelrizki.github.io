@@ -6,15 +6,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard Rekomendasi Saham</title>
   <style>
+    /* 1. VARIABEL WARNA (Default: Sekarang langsung DARK MODE) */
+    :root {
+      --bg-body: #0f172a;
+      --bg-section: #1e293b;
+      --text-main: #f8fafc;
+      --text-sub: #efefef;
+      --border-color: #334155;
+      --shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+
+      /* Card Dark Mode */
+      --card-buy-bg: linear-gradient(135deg, #064e3b 0%, #1e293b 80%);
+      --card-buy-border: #059669;
+      --card-sell-bg: linear-gradient(135deg, #7f1d1d 0%, #1e293b 80%);
+      --card-sell-border: #dc2626;
+      --text-percent-plus: #2dd4bf;
+      --text-percent-minus: #fca5a5;
+    }
+
+    /* 2. VARIABEL WARNA (Saat .light-mode aktif) */
+    body.light-mode {
+      --bg-body: #f1f5f9;
+      --bg-section: #ffffff;
+      --text-main: #0f172a;
+      --text-sub: #64748b;
+      --border-color: #e2e8f0;
+      --shadow: 0 12px 40px rgba(15, 23, 42, 0.08);
+
+      /* Card Light Mode */
+      --card-buy-bg: linear-gradient(135deg, #c7f0da 0%, #ffffff 70%);
+      --card-buy-border: #6fd1a8;
+      --card-sell-bg: linear-gradient(135deg, #f5caca 0%, #ffffff 70%);
+      --card-sell-border: #e08a8a;
+      --text-percent-plus: #0f766e;
+      --text-percent-minus: #991b1b;
+    }
+
     * {
       box-sizing: border-box;
       font-family: Inter, Arial, sans-serif;
+      transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
     }
 
     body {
       margin: 0;
-      background: #f1f5f9;
-      color: #0f172a;
+      background: var(--bg-body);
+      color: var(--text-main);
     }
 
     .container {
@@ -31,15 +68,15 @@
 
     .subtitle {
       text-align: center;
-      color: #64748b;
+      color: var(--text-sub);
       margin-bottom: 36px;
     }
 
     .section {
-      background: #ffffff;
+      background: var(--bg-section);
       border-radius: 18px;
       padding: 28px;
-      box-shadow: 0 12px 40px rgba(15, 23, 42, 0.08);
+      box-shadow: var(--shadow);
     }
 
     .section-header {
@@ -54,12 +91,27 @@
       font-size: 20px;
     }
 
-    .refresh {
+    /* Pembungkus tombol di sebelah kanan h3 agar sejajar */
+    .header-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-action {
       padding: 8px 14px;
       border-radius: 10px;
-      border: 1px solid #e2e8f0;
-      background: #fff;
+      border: 1px solid var(--border-color);
+      background: var(--bg-section);
+      color: var(--text-main);
       cursor: pointer;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-action:hover {
+      opacity: 0.85;
     }
 
     .grid {
@@ -78,6 +130,17 @@
       .grid {
         grid-template-columns: 1fr;
       }
+
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+      }
+
+      .header-buttons {
+        width: 100%;
+        justify-content: space-between;
+      }
     }
 
     .card {
@@ -90,15 +153,13 @@
     }
 
     .buy {
-      /* sampled dark green tone similar to image */
-      background: linear-gradient(135deg, #c7f0da 0%, #ffffff 70%);
-      border: 1px solid #6fd1a8;
+      background: var(--card-buy-bg);
+      border: 1px solid var(--card-buy-border);
     }
 
     .sell {
-      /* sampled dark red tone similar to image */
-      background: linear-gradient(135deg, #f5caca 0%, #ffffff 70%);
-      border: 1px solid #e08a8a;
+      background: var(--card-sell-bg);
+      border: 1px solid var(--card-sell-border);
     }
 
     .card-top {
@@ -112,38 +173,15 @@
       font-weight: 700;
     }
 
-    .company {
-      font-size: 13px;
-      color: #64748b;
-      margin-top: 2px;
-    }
-
     .change {
       font-weight: 700;
       font-size: 15px;
-      color: #0f766e;
+      color: var(--text-percent-plus);
     }
-
-    .change-minus {
+      .change-minus {
       font-weight: 700;
       font-size: 15px;
-      color: #991b1b;
-    }
-
-    .sell .change {
-      color: #991b1b;
-    }
-
-    .sell .change {
-      color: #b91c1c;
-    }
-
-    .sell .change {
-      color: #dc2626;
-    }
-
-    .sell .change {
-      color: #dc2626;
+      color: red;
     }
 
     .prices {
@@ -155,7 +193,7 @@
 
     .price-box span {
       font-size: 12px;
-      color: #64748b;
+      color: var(--text-sub);
     }
 
     .price-box div {
@@ -184,20 +222,20 @@
     }
 
     .btn-buy {
-      background: #0f766e;
+      background: #059669;
     }
 
-    .btn-baru {
-      background: #3B82F6;
+    .btn-new {
+      background: #1d93d8;
     }
 
     .btn-sell {
-      background: #991b1b;
+      background: #dc2626;
     }
 
     .date {
       font-size: 12px;
-      color: #475569;
+      color: var(--text-sub);
       white-space: nowrap;
     }
   </style>
@@ -211,151 +249,201 @@
     <div class="section">
       <div class="section-header">
         <h3>Rekomendasi SARA AI Hari Ini</h3>
-        <button class="refresh" onclick="location.reload()">⟳ Refresh</button>
+
+        <div class="header-buttons">
+          <button class="btn-action" id="themeToggle">
+            <span id="themeIcon">☀️</span> <span id="themeText">Light Mode</span>
+          </button>
+          <button class="btn-action" onclick="location.reload()">Refresh</button>
+        </div>
       </div>
+
       <div class="grid">
         <div class="card buy">
           <div class="card-top">
             <div>
               <div class="ticker">ADRO</div>
             </div>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <!-- <button class="btn btn-baru">BARU</button> -->
-               <div class="change">(7,11%)</div>
+             <!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="btn btn-new">Baru</button> -->
+            <div class="change">(+12,39%)</div>
           </div>
           <div class="prices">
             <div class="price-box"><span>Harga Sekarang</span>
-              <div>Rp 2.410</div>
+              <div>Rp 2.540</div>
             </div>
             <div class="price-box"><span>Harga Beli</span>
-              <div>Rp 2.250</div>
+              <div>Rp 2.260</div>
             </div>
           </div>
-          <div class="card-bottom">
-           <button class="btn btn-buy">📈 BELI</button>
-            <div class="date">Beli pada:
-              <strong>19 Februari 2026</strong>
-            </div>
+            <div class="card-bottom">
+            <button class="btn btn-buy">📈 BELI</button>
+            <div class="date">Beli pada: <strong>1 Juli 2026</strong></div>
           </div>
+          <!-- <div class="card-bottom">
+            <button class="btn btn-sell">📉 JUAL</button>
+            <div class="date">Jual pada: <strong>25 Juni 2026</strong></div>
+          </div> -->
         </div>
 
-        <div class="card sell">
+        <div class="card buy">
           <div class="card-top">
             <div>
               <div class="ticker">ANTM</div>
             </div>
+            <!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="btn btn-new">Baru</button> -->
+            <div class="change-minus">(-2,29%)</div>
           </div>
           <div class="prices">
             <div class="price-box"><span>Harga Sekarang</span>
-              <div>Rp 4.610</div>
+              <div>Rp 2.990</div>
             </div>
-            <div class="price-box"><span>Harga Jual</span>
-              <div>Rp 3.300</div>
+            <div class="price-box"><span>Harga Beli</span>
+              <div>Rp 3.060</div>
             </div>
           </div>
           <div class="card-bottom">
-            <button class="btn btn-sell">📉 JUAL</button>
-            <div class="date">Jual pada: <strong>30 Desember 2025</strong></div>
+            <button class="btn btn-buy">📈 BELI</button>
+            <div class="date">Beli pada: <strong>22 Juli 2026</strong></div>
           </div>
+          <!-- <div class="card-bottom">
+            <button class="btn btn-sell">📉 JUAL</button>
+            <div class="date">Jual pada: <strong>21 Juli 2026</strong></div>
+          </div> -->
         </div>
 
         <div class="card buy">
           <div class="card-top">
             <div>
               <div class="ticker">BBRI</div>
-      
             </div>
-            <div class="change">(+2,96%)</div>
+             <!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="btn btn-new">Baru</button> -->
+            <div class="change-minus">(-1,99%)</div>
           </div>
           <div class="prices">
             <div class="price-box"><span>Harga Sekarang</span>
-              <div>Rp 3.820</div>
+              <div>Rp 2.960</div>
             </div>
             <div class="price-box"><span>Harga Beli</span>
-              <div>Rp 3.710</div>
+              <div>Rp 3.020</div>
             </div>
           </div>
-          <div class="card-bottom">
+            <div class="card-bottom">
             <button class="btn btn-buy">📈 BELI</button>
-            <div class="date">Beli pada:
-              <strong>9 Januari 2026</strong>
-            </div>
+            <div class="date">Beli pada: <strong>21 Juli 2026</strong></div>
           </div>
+          <!-- <div class="card-bottom">
+            <button class="btn btn-sell">📉 JUAL</button>
+            <div class="date">Jual pada: <strong>22 April 2026</strong></div>
+          </div> -->
         </div>
 
         <div class="card buy">
           <div class="card-top">
             <div>
               <div class="ticker">BMRI</div>
-      
             </div>
-            <div class="change">(+17,21%)</div>
+              <!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="btn btn-new">Baru</button> -->
+            <div class="change-minus">(-2,82%)</div>
           </div>
           <div class="prices">
             <div class="price-box"><span>Harga Sekarang</span>
-              <div>Rp 5.075</div>
+              <div>Rp 4.130</div>
             </div>
             <div class="price-box"><span>Harga Beli</span>
-              <div>Rp 4.330</div>
+              <div>Rp 4.250</div>
             </div>
           </div>
+          <!-- <div class="card-bottom">
+            <button class="btn btn-sell">📉 JUAL</button>
+            <div class="date">Jual pada: <strong>10 Juli 2026</strong></div>
+          </div> -->
           <div class="card-bottom">
             <button class="btn btn-buy">📈 BELI</button>
-            <div class="date">Beli pada:
-              <strong>23 Oktober 2025</strong>
-            </div>
+            <div class="date">Beli pada: <strong>14 Juli 2026</strong></div>
           </div>
         </div>
 
-        <div class="card buy">
-          <div class="card-top">
-            <div>
-              <div class="ticker">PGAS</div>
-      
-            </div>
-
-            <div class="change">(+15,57%)</div>
-          </div>
-          <div class="prices">
-            <div class="price-box"><span>Harga Sekarang</span>
-              <div>Rp 2.450</div>
-            </div>
-            <div class="price-box"><span>Harga Beli</span>
-              <div>Rp 2.120</div>
-            </div>
-          </div>
-          <div class="card-bottom">
-            <button class="btn btn-buy">📈 BELI</button>
-            <div class="date">Beli pada:
-              <strong>2 Februari 2026</strong>
-            </div>
-          </div>
-        </div>
         <div class="card sell">
           <div class="card-top">
             <div>
-              <div class="ticker">TLKM</div>
-        
+              <div class="ticker">PGAS</div>
             </div>
           </div>
           <div class="prices">
             <div class="price-box"><span>Harga Sekarang</span>
-              <div>Rp 3.450</div>
+              <div>Rp 1.515</div>
             </div>
             <div class="price-box"><span>Harga Jual</span>
-              <div>Rp 3.470</div>
+              <div>Rp 1.890</div>
             </div>
           </div>
           <div class="card-bottom">
             <button class="btn btn-sell">📉 JUAL</button>
-            <div class="date">Jual pada:
-              <strong>16 Desember 2025</strong>
+            <div class="date">Jual pada: <strong>5 Mei 2026</strong></div>
+          </div>
+        </div>
+
+        <div class="card sell">
+          <div class="card-top">
+            <div>
+              <div class="ticker">TLKM</div>
             </div>
+                <!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="btn btn-new">Baru</button> -->
+            <!-- <div class="change">(+3,52%)</div> -->
+          </div>
+          <div class="prices">
+            <div class="price-box"><span>Harga Sekarang</span>
+              <div>Rp 2.630</div>
+            </div>
+            <div class="price-box"><span>Harga Jual</span>
+              <div>Rp 2.650</div>
+            </div>
+          </div>
+          <!-- <div class="card-bottom">
+            <button class="btn btn-buy">📈 BELI</button>
+            <div class="date">Beli pada: <strong>15 Juli 2026</strong></div>
+          </div> -->
+          <div class="card-bottom">
+            <button class="btn btn-sell">📉 JUAL</button>
+            <div class="date">Jual pada: <strong>24 Juli 2026</strong></div>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+  <script>
+    const themeToggleBtn = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeText = document.getElementById('themeText');
+
+    // Mengecek preferensi yang tersimpan, jika belum ada, biarkan kosong (default: dark)
+    if (localStorage.getItem('theme') === 'light') {
+      document.body.classList.add('light-mode');
+      themeIcon.textContent = '🌙';
+      themeText.textContent = 'Dark Mode';
+    }
+
+    themeToggleBtn.addEventListener('click', () => {
+      // Toggle class .light-mode pada body
+      document.body.classList.toggle('light-mode');
+
+      if (document.body.classList.contains('light-mode')) {
+        themeIcon.textContent = '🌙';
+        themeText.textContent = 'Dark Mode';
+        localStorage.setItem('theme', 'light');
+      } else {
+        themeIcon.textContent = '☀️';
+        themeText.textContent = 'Light Mode';
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+  </script>
 </body>
 
 </html>
